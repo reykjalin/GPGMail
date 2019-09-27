@@ -70,9 +70,6 @@ NSString * const kComposeBackEndPreferredSecurityPropertiesAccessLockKey = @"Com
 
 
 - (id)MA_makeMessageWithContents:(WebComposeMessageContents *)contents isDraft:(BOOL)isDraft shouldSign:(BOOL)shouldSign shouldEncrypt:(BOOL)shouldEncrypt shouldSkipSignature:(BOOL)shouldSkipSignature shouldBePlainText:(BOOL)shouldBePlainText {
-    if(![[GPGMailBundle sharedInstance] hasActiveContractOrActiveTrial]) {
-        return [self MA_makeMessageWithContents:contents isDraft:isDraft shouldSign:shouldSign shouldEncrypt:shouldEncrypt shouldSkipSignature:shouldSkipSignature shouldBePlainText:shouldBePlainText];
-    }
     GMComposeMessagePreferredSecurityProperties *securityProperties = self.preferredSecurityProperties;
     
 	GPGMAIL_SECURITY_METHOD securityMethod = securityProperties.securityMethod;
@@ -381,10 +378,6 @@ NSString * const kComposeBackEndPreferredSecurityPropertiesAccessLockKey = @"Com
     if(![((ComposeBackEnd *)self) delegate])
 		return [NSArray array];
 	
-    if(![[GPGMailBundle sharedInstance] hasActiveContractOrActiveTrial]) {
-        return [self MARecipientsThatHaveNoKeyForEncryption];
-    }
-    
     // Bug #957: Adapt GPGMail to the S/MIME changes introduced in Mail for 10.13.2b3
     //
     // _smimeLock is no longer a simple object to be used with @synchronized but instead
@@ -460,10 +453,6 @@ NSString * const kComposeBackEndPreferredSecurityPropertiesAccessLockKey = @"Com
     // Re-Implementation of Mail's updateSMIMEStatus.
     // updateSMIMEStatus is invoked by updateSecurityControls, which is responsible for any UI updates.
     // If we're *not* on the main thread, we let Mail handle the logging of the error.
-    if(![[GPGMailBundle sharedInstance] hasActiveContractOrActiveTrial]) {
-        [self MAUpdateSMIMEStatus:onComplete];
-        return;
-    }
     if(![NSThread isMainThread]) {
         [self MAUpdateSMIMEStatus:onComplete];
         return;

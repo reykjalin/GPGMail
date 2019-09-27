@@ -66,9 +66,6 @@ NSString * const kMCMessageGeneratorSecurityMethodKey = @"kMCMessageGeneratorSec
 	// message.
 	
 	NSData *newData = [self MA_newDataForMimePart:mimePart withPartData:partData];
-    if(![[GPGMailBundle sharedInstance] hasActiveContractOrActiveTrial]) {
-        return newData;
-    }
 	// If MailTags is not installed, let's get out of here.
 	if(NSClassFromString(@"MailTagsBundle") == nil)
 		return newData;
@@ -117,7 +114,7 @@ NSString * const kMCMessageGeneratorSecurityMethodKey = @"kMCMessageGeneratorSec
     // from +[Library_GPGMail GMLocalMessageDataForMessage:topLevelPart:error].
     // In that case `securityMethod` is not set on the writer and the native Mail
     // method can be called.
-    if(![[GPGMailBundle sharedInstance] hasActiveContractOrActiveTrial] || ![self ivarExists:kMCMessageGeneratorSecurityMethodKey]) {
+    if(![self ivarExists:kMCMessageGeneratorSecurityMethodKey]) {
         return [self MA_newOutgoingMessageFromTopLevelMimePart:topLevelPart topLevelHeaders:topLevelHeaders withPartData:partData];
     }
     if(!topLevelHeaders) {

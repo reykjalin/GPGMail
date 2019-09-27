@@ -113,30 +113,13 @@ NSString *SUScheduledCheckIntervalKey = @"SUScheduledCheckInterval";
 }
 
 - (NSString *)registrationCode {
-	if([[GPGMailBundle sharedInstance] hasActiveContract]) {
-		NSDictionary *contractInformation = [[GPGMailBundle  sharedInstance] contractInformation];
-		return [NSString stringWithFormat:@"Code: %@", contractInformation[@"ActivationCode"]];
-	}
 	return @"";
 }
-- (NSString *)registrationDescription {
-    if([[GPGMailBundle sharedInstance] hasActiveContract]) {
-        NSDictionary *contractInformation = [[GPGMailBundle  sharedInstance] contractInformation];
-        return [NSString stringWithFormat:@"Registered to: %@", contractInformation[@"ActivationEmail"]];
-    }
-    NSNumber *remainingDays = [[self bundle] remainingTrialDays];
-    return [NSString stringWithFormat:@"Trial Version%@", [remainingDays integerValue] <= 0 ? @" Expired" : [NSString stringWithFormat:@" (%@ days remaining)", remainingDays]];
-}
 
-- (IBAction)activateSupportPlan:(NSButton *)sender {
-	[[GPGMailBundle sharedInstance] startSupportContractWizard];
-}
+
 - (IBAction)learnMore:(NSButton *)sender {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://gpgtools.org/buy-support-plan"]];
 }
-
-
-
 
 - (NSImage *)imageForPreferenceNamed:(NSString *)aName {
 	return [NSImage imageNamed:@"GPGMail"];
@@ -167,12 +150,7 @@ NSString *SUScheduledCheckIntervalKey = @"SUScheduledCheckInterval";
 
 
 - (void)willBeDisplayed {
-    if([[GPGMailBundle sharedInstance] hasActiveContract]) {
-        [self setState:GPGMailPreferencesSupportPlanStateActiveState];
-    }
-    else {
-        [self setState:GPGMailPreferencesSupportPlanStateTrialState];
-    }
+	[self setState:GPGMailPreferencesSupportPlanStateTrialState];
 }
 
 - (void)setState:(GPGMailPreferencesSupportPlanState)state {
